@@ -1,0 +1,36 @@
+{% extends "activitystream/base.html" %}
+{% load crispy_forms_tags %}
+{% block extra_css %}
+    <style>
+    #leave_button, #bookleave_button{
+        background-color: white;
+        font-size: 1rem;
+        color: darkorange;
+    }
+    </style>
+{% endblock %}
+{% block content %}
+    <style>
+        #main{
+    padding: 2rem;
+    border: solid 1px lightgrey;
+    border-radius: 1rem;
+    background: white;
+    margin-bottom: 1rem;
+}
+    </style>
+    <div id = "main">
+    <div class="content-section">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Feedback Form</legend>
+                {{ form|crispy  }}
+            </fieldset>
+            <div class="form-group">
+                <button class="btn btn-outline-info" type="submit">Update</button>
+            </div>
+        </form>
+    </div>
+    </div>
+{%  endblock content %}

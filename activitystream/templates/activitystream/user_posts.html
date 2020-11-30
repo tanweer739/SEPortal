@@ -1,0 +1,155 @@
+{% extends 'activitystream/base.html' %}
+{% block extra_css %}
+    <style>
+    #activity_button{
+        background-color: white;
+        font-size: 1rem;
+        color: darkorange;
+    }
+    </style>
+{% endblock %}
+{% block content %}
+    <style>
+
+
+ h2, h3, h4, h5, h6 {
+  color: #444444;
+}
+
+ul {
+  margin: 0;
+}
+
+.bg-steel {
+  background-color: #5f788a;
+}
+
+.site-header .navbar-nav .nav-link {
+  color: #cbd5db;
+}
+
+.site-header .navbar-nav .nav-link:hover {
+  color: #ffffff;
+}
+
+.site-header .navbar-nav .nav-link.active {
+  font-weight: 500;
+}
+
+.content-section {
+  background: #ffffff;
+  padding: 10px 20px;
+  border-radius: 3px;
+  margin-bottom: 20px;
+}
+
+.article-title {
+  color: #444444;
+}
+
+a.article-title:hover {
+  color: #428bca;
+  text-decoration: none;
+}
+
+.article-content {
+  white-space: pre-line;
+}
+
+.article-img {
+  height: 65px;
+  width: 65px;
+  margin-right: 16px;
+}
+
+.article-metadata {
+  padding-bottom: 1px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid #e3e3e3
+}
+
+.article-metadata a:hover {
+  color: #333;
+  text-decoration: none;
+}
+#post_buttons{float:right}
+
+    #postcontent{
+    padding: 0.5rem;
+    border: solid 1px lightgrey;
+    border-radius: 0.5rem;
+    background: white;
+    margin-bottom: 1rem;
+}
+    </style>
+
+        {% if posts.count != 0 %}
+            <h2 class="mb-3">Posts by {{ view.kwargs.username }}     ({{ posts.count}})</h2>
+        {% else %}
+            <h2 class="mb-3">{{ view.kwargs.username }} has not made any posts yet.</h2>
+        {% endif %}
+
+
+        {% for post in posts %}
+            <div id="postcontent">
+        <article class="media content-section">
+        <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}">
+  <div class="media-body">
+    <div class="article-metadata">
+        <a class="mr-2" href="{% url 'user-posts' post.author.username %}">{{ post.author }}</a>
+      <small class="text-muted">{{ post.date_posted | date:'F d, Y' }}</small>
+    </div>
+            {% if post.author == user %}
+                <div id="post_buttons">
+                <a class="btn btn-outline-info btn-sm mt-1 mb-1" href="{% url 'post-update' post.id %}">Update</a>
+                <a class="btn btn-outline-danger btn-sm mt-1 mb-1" href="{% url 'post-delete' post.id %}">Delete</a>
+                <a class="btn btn-outline-dark btn-sm mt-1 mb-1" href="{% url 'add_comment' pk=post.pk %}">Comment</a>
+                </div>
+            {% else %}
+                <div id="post_buttons">
+                <a class="btn btn-outline-dark btn-sm mt-1 mb-1" href="{% url 'add_comment' pk=post.pk %}">Comment</a>
+                </div>
+            {% endif %}
+    <h4>{{ post.title }}</h4>
+    <p class="article-content">{{ post.content }}</p>
+      {% if post.document != '' %}
+      <a class="btn btn-primary" href="{{ post.document.url }}" target="_blank">{{ post.filename }}</a>
+        {% endif %}
+  </div>
+</article>
+            {% for comment in post.comment_set.all  %}
+        <div id="comment">
+        <article class="media content-section">
+        <img class="rounded-circle article-img" src="{{ comment.author.profile.image.url }}"  style="width:40px; height:40px">
+  <div class="media-body">
+    <div class="article-metadata">
+        <a class="mr-2" href="{% url 'user-posts' comment.author.username %}">{{ comment.author }}</a>
+      <small class="text-muted">{{ comment.date_posted | date:'F d, Y' }}</small>
+    </div>
+            {% if comment.author == user %}
+                <div id="post_buttons">
+                <a class="btn btn-outline-info btn-sm mt-1 mb-1" href="{% url 'comment-update' comment.id %}">Update</a>
+                <a class="btn btn-outline-danger btn-sm mt-1 mb-1" href="{% url 'comment-delete' comment.id %}">Delete</a>
+                </div>
+            {% endif %}
+    <p class="article-content">{{ comment.content }}</p>
+      {% if comment.document != '' %}
+            <a class="btn btn-primary" href="{{ comment.document.url }}" target="_blank">{{ comment.filename }}</a>
+        {% endif %}
+  </div>
+</article>
+        </div>
+                {% endfor %}
+            </div>
+    {% endfor %}
+            {% if is_paginated %}
+            {% for i in page_obj.paginator.page_range %}
+                {% if page_obj.number == i %}
+                    <a class="btn btn-success mb-4" href="?page={{ i }}">{{ i }}</a>
+                    {% else %}
+                    <a class="btn btn-outline-success mb-4" href="?page={{ i }}">{{ i }}</a>
+                {% endif %}
+            {% endfor %}
+    {% endif %}
+
+{% endblock content %}

@@ -1,0 +1,101 @@
+{% extends 'activitystream/base.html' %}
+{% block extra_css %}
+    <style>
+    #report_button, #reportto_button{
+        background-color: white;
+        font-size: 1rem;
+        color: darkorange;
+    }
+    </style>
+{% endblock %}
+{% block content %}
+    <style>
+    a.btn:hover {
+    color: white;
+    text-decoration: none;
+    }
+    #main{
+    padding: 2rem;
+    border: solid 1px lightgrey;
+    border-radius: 1rem;
+    background: white;
+    margin-bottom: 1rem;
+}
+    </style>
+<div id = "main">
+{% if user.is_active and user.is_staff %}
+    {% for feedback in object_list %}
+        {% if not feedback.author.is_staff %}
+        {{ feedback.feedbackseen|default_if_none:'' }}
+        {% endif %}
+    {% endfor %}
+    {% else %}
+    {% for feedback in object_list %}
+        {% if feedback.author.is_staff %}
+        {{ feedback.feedbackseen|default_if_none:'' }}
+        {% endif %}
+    {% endfor %}
+    {% endif %}
+
+
+    <div class="media">
+    <div class="media-left">
+      <img src="{{ report.author.profile.image.url }}" class="media-object" style="width:60px">
+    </div>
+    <div class="media-body ml-2">
+        <h4 class="media-heading">{{report.title}}<small><i>  {{ report.date_posted }}</i></small>
+            {% if report.author == user %}<a href="{% url 'report-update' report.id %}" class="btn btn-outline-info" style="float: right">Update</a>{% endif %}
+            <a href="{% url 'add_feedback' pk=report.pk %}" class="btn btn-outline-dark mr-2" style="float: right">Reply</a></h4><br>
+      <p>  {{ report.content }}</p>
+        {% if report.document != '' %}
+        <a class="btn btn-primary btn-sm" href="{{ report.document.url }}" target="_blank">{{ report.filename }}</a>
+        {% endif %}
+    </div>
+  </div>
+  <hr>
+
+  <!-- Right-aligned media object -->
+    {% for feedback in object_list %}
+
+        {% if feedback.author.is_staff %}
+  <div class="media">
+    <div class="media-body">
+        <h4 class="media-heading">{{feedback.author}}<small><i>   {{ feedback.date_posted }}</i></small>{% if feedback.author == user %}<a href="{% url 'feedback-delete' feedback.id %}" class="btn btn-outline-danger" style="float: right">Delete</a><a href="{% url 'feedback-update' feedback.id %}" class="btn btn-outline-info mr-2" style="float: right">Update</a>{% endif %}</h4>
+      <p>{{ feedback.content }}</p>
+        {% if feedback.document != '' %}
+        <a class="btn btn-primary btn-sm" href="{{ feedback.document.url }}" target="_blank">{{ feedback.filename }}</a>
+            {% endif %}
+    </div>
+    <div class="media-right">
+
+      <img src="{{ feedback.author.profile.image.url }}" class="media-object" style="width:60px">
+
+    </div>
+  </div>
+  {% else %}
+   <div class="media">
+    <div class="media-left">
+      <img src="{{ feedback.author.profile.image.url }}" class="media-object" style="width:60px">
+    </div>
+    <div class="media-body ml-2">
+        <h4 class="media-heading">{{feedback.author}}<small><i>{{ feedback.date_posted }}</i></small>{% if feedback.author == user %}<a href="{% url 'feedback-delete' feedback.id %}" class="btn btn-outline-danger" style="float: right">Delete</a><a href="{% url 'feedback-update' feedback.id %}" class="btn btn-outline-info mr-2" style="float: right">Update</a>{% endif %}</h4>
+      <p>  {{ feedback.content }}</p>
+        {% if feedback.document != '' %}
+        <a class="btn btn-primary btn-sm" href="{{ feedback.document.url }}" target="_blank">{{ feedback.filename }}</a>
+            {% endif %}
+    </div>
+  </div>
+        {% endif %}
+        <hr>
+    {% endfor %}
+        {% if is_paginated %}
+            {% for i in page_obj.paginator.page_range %}
+                {% if page_obj.number == i %}
+                    <a class="btn btn-success mb-4" href="?page={{ i }}">{{ i }}</a>
+                    {% else %}
+                    <a class="btn btn-outline-success mb-4" href="?page={{ i }}">{{ i }}</a>
+                {% endif %}
+            {% endfor %}
+    {% endif %}
+</div>
+{% endblock content %}

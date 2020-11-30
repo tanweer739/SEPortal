@@ -1,0 +1,212 @@
+{% extends 'activitystream/base.html' %}
+{% block extra_css %}
+    <style>
+    #leave_button, #bookleave_button{
+        background-color: white;
+        font-size: 1rem;
+        color: darkorange;
+    }
+    </style>
+{% endblock %}
+{% block content %}
+    <style>
+
+.list-group {
+    padding-left: 0;
+    margin-bottom: 20px;
+}
+
+.list-group-item:first-child {
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+.list-group-item:hover{
+    background-color: #e3e3e3;
+}
+
+.media:first-child {
+    margin-top: 0;
+}
+.media, .media-body {
+    overflow: hidden;
+    zoom: 1;
+}
+.media {
+    margin-top: 15px;
+}
+    .support-content .fa-padding .fa {
+    padding-top: 5px;
+    width: 1.5em;
+}
+
+.fa.pull-left {
+    margin-right: .3em;
+}
+
+.pull-left {
+    float: left;
+}
+
+.pull-left {
+    float: left!important;
+}
+i {
+    font-style: italic;
+}
+
+
+.media-body {
+    width: 10000px;
+}
+.media, .media-body {
+    overflow: hidden;
+    zoom: 1;
+}
+div {
+    display: block;
+}
+    b, strong {
+    font-weight: 700;
+}
+strong {
+    font-weight: bold;
+}
+    .label-danger {
+    background-color: #d9534f;
+}
+    .label-success {
+    background-color: forestgreen;
+}
+    .label-info {
+    background-color: #5bc0de;
+}
+    .label-primary {
+    background-color: #337ab7;
+}
+    .label-default {
+    background-color: #777;
+}
+    .label-warning {
+    background-color: #f0ad4e;
+}
+.label {
+    display: inline;
+    padding: .2em .6em .3em;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25em;
+}
+    .support-content .number {
+    color: #777;
+}
+    .support-content .list-group li {
+    padding: 15px 20px 12px 20px;
+    cursor: pointer;
+}
+.pull-right {
+    float: right;
+}
+.pull-right {
+    float: right!important;
+}
+
+p {
+    margin: 0 0 10px;
+}
+
+
+p {
+    display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+}
+    .support-content a {
+    color: #111;
+}
+
+    .support-content .info .fa {
+    width: 1.5em;
+    text-align: center;
+}
+
+.support-content .fa-padding .fa {
+    padding-top: 5px;
+    width: 1.5em;
+}
+i {
+    font-style: italic;
+}
+    .support-content a {
+    color: #111;
+}
+    </style>
+
+
+
+
+
+
+
+
+    {% for leave in leaves %}
+
+
+    <ul class="list-group fa-padding">
+        <li class="list-group-item">
+            <div class="media">
+                <i class="fa fa-cog pull-left"></i>
+                <div class="media-body">
+                <a href="{% url 'leave-detail' leave.id %}" class="stretched-link">
+                    <strong>{{ leave.title }}</strong>
+                    {% if leave.type == 'Sickday' %}
+                        <span class="label label-warning" style="color: white">{{ leave.type }}</span>
+                    {% else %}
+                        <span class="label label-info" style="color: white">{{ leave.type }}</span>
+                    {% endif %}
+                    {% if leave.is_accepted  %}
+                        <span class="label label-success" style="color: white">Accepted</span>
+                        <a href="{% url 'leave-detail' leave.id %}" class="stretched-link"></a>
+                     {% elif not leave.is_accepted and not leave.is_rejected %}
+                        <span class="label label-default" style="color: white">Waiting</span>
+                        <a href="{% url 'leave-detail' leave.id %}" class="stretched-link"></a>
+                        {% else %}
+                        <span class="label label-danger" style="color: white">Rejected</span>
+                {% endif %}
+
+                {% if leave.reply_set.count != 0 %}
+                    <span class="label label-primary" style="color: white">Has Feedback</span>
+                {% else %}
+                    <span class="label label-default" style="color: white">No Feedback</span>
+                    {% endif %}
+                <span class="label label-default" style="color: white">{{leave.difference}}-day leave</span>
+                    <span class="number pull-right"># {{ leave.pk }}</span>
+                    <p class="info"><a href="{% url 'profile' %}">Opened by {{leave.owner.username}}</a> {{ leave.date_posted }} <i class="fa fa-comments"></i></p>
+                </a>
+                </div>
+
+            </div>
+        </li>
+    </ul>
+
+
+    {% endfor %}
+
+{% if is_paginated %}
+            {% for i in page_obj.paginator.page_range %}
+                {% if page_obj.number == i %}
+                    <a class="btn btn-success mb-4" href="?page={{ i }}">{{ i }}</a>
+                    {% else %}
+                    <a class="btn btn-outline-success mb-4" href="?page={{ i }}">{{ i }}</a>
+                {% endif %}
+            {% endfor %}
+    {% endif %}
+
+{% endblock %}

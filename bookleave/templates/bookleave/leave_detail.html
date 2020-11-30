@@ -1,0 +1,147 @@
+{% extends 'activitystream/base.html' %}
+{% load crispy_forms_tags %}
+{% block extra_css %}
+    <style>
+    #leave_button, #bookleave_button{
+        background-color: white;
+        font-size: 1rem;
+        color: darkorange;
+    }
+    </style>
+{% endblock %}
+{% block content %}
+
+<style>
+    .container{
+        border: 1px solid #e3e3e3;
+        margin-top: 1rem;
+        margin-bottom: 2rem;
+        padding: 1rem ;
+        border-radius: 0.5rem;
+    }
+    p.btn {
+    color: white;
+    text-decoration: none;
+        pointer-events: none;
+    }
+.btn-info {
+    background-color: #5bc0de;
+}
+.btn-default {
+    background-color: #777;
+}
+    </style>
+
+                <div class = container>
+                <div class="media">
+                    <div class="media-left">
+                        <img src="{{ leave.owner.profile.image.url }}" class="media-object" style="width:60px">
+                    </div>
+                    <div class="media-body ml-2">
+
+                        <h4 class="media-heading">{{leave.owner.username}}<small><i>  {{ leave.date_posted }}</i></small>
+                            {% if user.is_active and user.is_staff %}<a href="{% url 'leave-accept-reject' leave.id %}" class="btn btn-outline-info" style="float: right">Accept/Reject</a>{% endif %}
+                            {% if leave.is_accepted or leave.is_rejected %}<a href="{% url 'add_reply' pk=leave.pk %}" class="btn btn-outline-dark mr-2" style="float: right">Feedback</a></h4>{% endif %}
+                            {% if leave.type == 'Sickday' %}
+                            <p class="btn btn-warning btn-sm">  {{ leave.type }}</p>
+                            <p class="btn btn-warning btn-sm">  {{ leave.difference }} day leave</p>
+                            {% else %}
+                            <p class="btn btn-info btn-sm">  {{ leave.type }}</p>
+                            <p class="btn btn-info btn-sm">  {{ leave.difference }} day leave</p>
+                            {% endif %}
+                    </div>
+                </div>
+                <hr>
+                <div class="media">
+                    <div class="media-body">
+                        <label style="font-size: large; font-weight: bold">Title :</label>
+                            <p> {{ leave.title }}</p>
+                        <hr>
+                    </div>
+                </div>
+                <div class="media">
+                    <div class="media-body">
+                        <label style="font-size: large; font-weight: bold">Content :</label>
+                            <p> {{ leave.content }}</p>
+                        <hr>
+                    </div>
+                </div>
+                <div class="media">
+                    <div class="media-body">
+                        <label style="font-size: large; font-weight: bold">Begin date :</label>
+                            <p> {{ leave.begindate }}</p>
+                        <hr>
+                    </div>
+                </div>
+                <div class="media">
+                    <div class="media-body">
+                        <label style="font-size: large; font-weight: bold">End date :</label>
+                            <p> {{ leave.enddate }}</p>
+                        <hr>
+                    </div>
+                </div>
+                <div class="media">
+                    <div class="media-body">
+
+                            {% if not leave.is_accepted and not leave.is_rejected %}
+                                <label style="font-size: large; font-weight: bold">Status :</label>
+                            <p class="btn btn-default">Waiting </p>
+                                <hr>
+                            {% elif  leave.is_rejected %}
+                                <label style="font-size: large; font-weight: bold">Status :</label>
+                            <p class="btn btn-danger">Rejected</p>
+                                <hr>
+                                <style>
+                                .container{
+                                        border: 1px solid #e3e3e3;
+                                        margin-top: 15px;
+                                        background-color:#ffe6e6;
+                                    }
+                                </style>
+                            {% else %}
+                                <label style="font-size: large; font-weight: bold">Status :</label>
+                            <p class="btn btn-success">Accepted</p>
+                                <hr>
+                                <style>
+                                .container{
+                                        border: 1px solid #e3e3e3;
+                                        margin-top: 15px;
+                                        background-color:#e6ffe6;
+                                    }
+                                </style>
+                            {% endif %}
+                    </div>
+                </div>
+                 <div class="media">
+                    <div class="media-body">
+                            {% if leave.document != '' %}
+                                 <label style="font-size: large; font-weight: bold">Document :</label>
+                            <a class="btn btn-primary btn-sm" href="{{ leave.document.url }}" target="_blank">{{ leave.filename }}</a>
+                            <hr>
+                            {% endif %}
+                    </div>
+                 </div>
+                {% for reply in replies %}
+                <div class="media">
+                    <div class="media-body">
+                        <h4 class="media-heading">{{reply.owner}}<small><i>   {{ reply.date_posted }}</i></small>
+                            {% if reply.owner == user %}<a href="{% url 'reply-delete' reply.id %}" class="btn btn-outline-danger" style="float: right">Delete</a>
+                                <a href="{% url 'reply-update' reply.id %}" class="btn btn-outline-info mr-2" style="float: right">Update</a>{% endif %}</h4>
+                      <p>{{ reply.content }}</p>
+                    </div>
+                    <div class="media-right">
+
+                      <img src="{{ reply.owner.profile.image.url }}" class="media-object" style="width:60px">
+
+                    </div>
+                  </div>
+    {% endfor %}
+</div>
+<!-- Grid row -->
+
+
+<!-- Grid row -->
+
+
+
+{% endblock %}

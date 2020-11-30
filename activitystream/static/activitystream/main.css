@@ -1,0 +1,84 @@
+.list-group-item-action{
+    background-color: #feb300; !important;
+    position: fixed;
+}
+body {
+  overflow-x: hidden;
+  font-family: 'Poppins', sans-serif;
+  background: #fff5d7;
+}
+.btn-primary { background-color: #feb300; !important; }
+.btn-primary:focus,.btn-primary:hover{ background-color: red !important;}
+
+.list-group-item-action:hover {
+    color: darkorange !important;
+    background-color: #fff !important;
+}
+.list-group-item-action:active {
+    font-size: 1.6rem;
+    color: darkorange !important;
+    background-color: #fff !important;
+}
+
+#activity_button{margin-top:6.3rem; width: 15rem; }
+#report_button,#reportto_button{margin-top:9.3rem; width:15rem;}
+#leave_button,#bookleave_button{margin-top:12.3rem; width: 15rem;}
+#main-section{margin-top: -2rem;}
+.sidebar-heading{
+    position: fixed;
+    color: white;
+   background: rgba(0, 0, 0, 0.2);
+}
+.navbar {
+    padding: 20px ;
+    background: #fff;
+    border: none;
+    border-radius: 0;
+    margin-bottom: 40px;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+#sidebar-wrapper {
+  min-height: 100vh;
+  margin-left: -15rem;
+  -webkit-transition: margin .25s ease-out;
+  -moz-transition: margin .25s ease-out;
+  -o-transition: margin .25s ease-out;
+  transition: margin .25s ease-out;
+
+}
+
+#sidebar-wrapper .sidebar-heading {
+  padding: 0.875rem 1.25rem;
+  font-size: 1.2rem;
+}
+
+#sidebar-wrapper .list-group {
+  width: 15rem;
+}
+
+#page-content-wrapper {
+  min-width: 100vw;
+}
+
+#wrapper.toggled #sidebar-wrapper {
+  margin-left: 0;
+}
+
+@media (min-width: 768px) {
+  #sidebar-wrapper {
+    margin-left: 0;
+  }
+
+  #page-content-wrapper {
+    min-width: 0;
+    width: 100%;
+  }
+
+  #wrapper.toggled #sidebar-wrapper {
+    margin-left: -15rem;
+  }
+
+}
+
+h1{font-family: Raleway  ;}

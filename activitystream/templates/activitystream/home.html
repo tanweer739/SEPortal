@@ -1,0 +1,166 @@
+{% extends 'activitystream/base.html' %}
+{% block extra_css %}
+    <style>
+    #activity_button{
+        background-color: white;
+        font-size: 1rem;
+        color: darkorange;
+    }
+    </style>
+{% endblock %}
+{% block content %}
+    <style>
+
+
+ h2, h3, h4, h5, h6 {
+  color: #444444;
+}
+
+ul {
+  margin: 0;
+}
+
+.bg-steel {
+  background-color: #5f788a;
+}
+
+.site-header .navbar-nav .nav-link {
+  color: #cbd5db;
+}
+
+.site-header .navbar-nav .nav-link:hover {
+  color: #ffffff;
+}
+
+.site-header .navbar-nav .nav-link.active {
+  font-weight: 500;
+}
+
+.content-section {
+  background: #ffffff;
+  padding: 10px 20px;
+  border-radius: 3px;
+  margin-bottom: 20px;
+}
+
+.article-title {
+  color: #444444;
+}
+
+a.article-title:hover {
+  color: #428bca;
+  text-decoration: none;
+}
+
+.article-content {
+  white-space: pre-line;
+}
+
+.article-img {
+  height: 65px;
+  width: 65px;
+  margin-right: 16px;
+}
+
+.article-metadata {
+  padding-bottom: 1px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid #e3e3e3
+}
+
+#postcontent{
+    padding: 0.5rem;
+    border: solid 1px lightgrey;
+    border-radius: 0.5rem;
+    background: white;
+    margin-bottom: 1rem;
+}
+
+.btn:hover{
+    color: white !important;
+}
+.article-metadata a:hover {
+  color: #333;
+  text-decoration: none;
+}
+#picture{
+        float:right;
+    }
+#post_buttons{float:right; margin-bottom:15px;}
+    </style>
+        {% for post in posts %}
+<div id="postcontent">
+        <article class="media content-section">
+        <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}">
+  <div class="media-body">
+    <div class="article-metadata">
+        {% if post.author == user %}
+          <div id = post_buttons>
+                <a class="btn btn-outline-info btn-sm mt--4 mb-1" href="{% url 'post-update' post.id %}">Update</a>
+                <a class="btn btn-outline-danger btn-sm mt--4 mb-1" href="{% url 'post-delete' post.id %}">Delete</a>
+                <a class="btn btn-outline-dark btn-sm mt--4 mb-1" href="{% url 'add_comment' pk=post.pk %}">Comment</a>
+          </div>
+
+            {% else %}
+          <div id = post_buttons>
+                <a class="btn btn-outline-dark btn-sm mt--4 mb-1" href="{% url 'add_comment' pk=post.pk %}">Comment</a>
+          </div>
+            {% endif %}
+    <div><a class="mr-2" href="{% url 'user-posts' post.author.username %}">{{ post.author }}</a>
+      <small class="text-muted">{{ post.date_posted | date:'F d, Y' }}</small></div>
+    <br>
+    </div>
+
+      <h4><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h4>
+    <p class="article-content">{{ post.content }}</p>
+        {% if post.document != '' %}
+      <a class="btn btn-primary btn-sm" href="{{ post.document.url }}" target="_blank">{{ post.filename }}</a>
+        {% endif %}
+  </div>
+</article>
+<hr/>
+            {% for comment in post.comment_set.all  %}
+        <div id="comment">
+        <img class="rounded-circle article-img" id = "picture" src="{{ comment.author.profile.image.url }}" style="width:60px; height:60px">
+        <article class="media content-section ml-5" >
+  <div class="media-body">
+    <div class="article-metadata">
+        {% if comment.author == user %}
+                <div id = "post_buttons">
+                <a class="btn btn-outline-info btn-sm mt-2 mb-1" href="{% url 'comment-update' comment.id %}">Update</a>
+                <a class="btn btn-outline-danger btn-sm mt-2 mb-1" href="{% url 'comment-delete' comment.id %}">Delete</a>
+                </div>
+  {% endif %}
+
+
+        <div><a class="mr-2" href="{% url 'user-posts' comment.author.username %}">{{ comment.author }}</a>
+      <small class="text-muted">{{ comment.date_posted | date:'F d, Y' }}</small></div><br>
+
+    </div>
+
+    <p class="article-content">{{ comment.content }}</p>
+        {% if comment.document != '' %}
+            <a class="btn btn-primary btn-sm" href="{{ comment.document.url }}" target="_blank">{{ comment.filename }}</a>
+        {% endif %}
+
+  </div>
+        </article>
+        </div>
+                <hr/>
+                {% endfor %}
+            </div>
+    {% endfor %}
+    {% if is_paginated %}
+            {% for i in page_obj.paginator.page_range %}
+                {% if page_obj.number == i %}
+                    <a class="btn btn-success mb-4" href="?page={{ i }}">{{ i }}</a>
+                    {% else %}
+                    <a class="btn btn-outline-success mb-4" href="?page={{ i }}">{{ i }}</a>
+                {% endif %}
+            {% endfor %}
+    {% endif %}
+
+{% endblock content %}
+
+
+

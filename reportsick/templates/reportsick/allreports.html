@@ -1,0 +1,190 @@
+{% extends 'activitystream/base.html' %}
+{% block extra_css %}
+    <style>
+    #report_button, #reportto_button{
+        background-color: white;
+        font-size: 1rem;
+        color: darkorange;
+    }
+    </style>
+{% endblock %}
+{% block content %}
+    <style>
+
+.list-group {
+    padding-left: 0;
+    margin-bottom: 20px;
+}
+
+.list-group-item:first-child {
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+.list-group-item:hover{
+    background-color: #e3e3e3;
+}
+
+.media:first-child {
+    margin-top: 0;
+}
+.media, .media-body {
+    overflow: hidden;
+    zoom: 1;
+}
+.media {
+    margin-top: 15px;
+}
+    .support-content .fa-padding .fa {
+    padding-top: 5px;
+    width: 1.5em;
+}
+
+.fa.pull-left {
+    margin-right: .3em;
+}
+
+.pull-left {
+    float: left;
+}
+
+.pull-left {
+    float: left!important;
+}
+i {
+    font-style: italic;
+}
+
+
+.media-body {
+    width: 10000px;
+}
+.media, .media-body {
+    overflow: hidden;
+    zoom: 1;
+}
+div {
+    display: block;
+}
+    b, strong {
+    font-weight: 700;
+}
+strong {
+    font-weight: bold;
+}
+    .label-danger {
+    background-color: #d9534f;
+}
+    .label-success {
+    background-color: forestgreen;
+}
+.label {
+    display: inline;
+    padding: .2em .6em .3em;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25em;
+}
+    .support-content .number {
+    color: #777;
+}
+    .support-content .list-group li {
+    padding: 15px 20px 12px 20px;
+    cursor: pointer;
+}
+.pull-right {
+    float: right;
+}
+.pull-right {
+    float: right!important;
+}
+
+p {
+    margin: 0 0 10px;
+}
+
+
+p {
+    display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+}
+    .support-content a {
+    color: #111;
+}
+a {
+    color: #337ab7;
+    text-decoration: none;
+}
+a {
+    background-color: transparent;
+}
+    .support-content .info .fa {
+    width: 1.5em;
+    text-align: center;
+}
+
+.support-content .fa-padding .fa {
+    padding-top: 5px;
+    width: 1.5em;
+}
+i {
+    font-style: italic;
+}
+    .support-content a {
+    color: #111;
+}
+a {
+    color: #337ab7;
+    text-decoration: none;
+}
+a {
+    background-color: transparent;
+}
+
+    </style>
+
+
+    {% for report in reports %}
+
+    <ul class="list-group fa-padding">
+        <li class="list-group-item">
+            <div class="media">
+                <i class="fa fa-cog pull-left"></i>
+                <div class="media-body">
+                <a href="{% url 'report-detail' report.id %}" class="stretched-link">
+                    <strong>{{ report.title }}</strong>
+
+                {% if report.feedbackunseenStaff == 0 %}
+                    <span class="label label-danger" style="color: white; font-size: 0.8em">New Reply {{ report.feedbackunseenStaff }}</span>
+                    {% else %}
+                        <span class="label label-success" style="color: white; font-size: 0.8em">New Reply {{ report.feedbackunseenStaff }}</span>
+                    {% endif %}
+                    <span class="number pull-right"># {{ report.pk }}</span>
+                    <p class="info"><a href="{% url 'profile' %}">Opened by {{report.author.username}}</a> {{ report.date_posted }} <i class="fa fa-comments"></i></p>
+                </div>
+            </a>
+            </div>
+        </li>
+    </ul>
+
+    {% endfor %}
+
+{% if is_paginated %}
+            {% for i in page_obj.paginator.page_range %}
+                {% if page_obj.number == i %}
+                    <a class="btn btn-success mb-4" href="?page={{ i }}">{{ i }}</a>
+                    {% else %}
+                    <a class="btn btn-outline-success mb-4" href="?page={{ i }}">{{ i }}</a>
+                {% endif %}
+            {% endfor %}
+    {% endif %}
+
+{% endblock %}

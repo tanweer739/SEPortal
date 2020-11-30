@@ -1,0 +1,129 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Employee Portal</title>
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <!-- Custom styles for this template -->
+  <link rel="stylesheet" type="text/css" href="{% static 'activitystream/main.css' %}">
+  <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet'>
+
+
+
+</head>
+
+<body>
+{% block extra_css %}{% endblock %}
+
+  <div class="d-flex" id="wrapper">
+
+    <!-- Sidebar -->
+    <div class=" border-right" style="background-color: #feb300; !important;" id="sidebar-wrapper">
+      <div class="sidebar-heading" style="background-color: #feb300; !important;"><h1> <img src="{% static "activitystream/logo.png" %}" alt="Employee Portal" style="width:60px"/> EMP</h1></div>
+      <div class="list-group list-group-flush">
+        <a href="{% url 'activity-home' %}" class="list-group-item list-group-item-action" id = "activity_button" >Activity Stream</a>
+        {% if user.is_active and user.is_staff %}
+        <a href="{% url 'all-reports' %}" class="list-group-item list-group-item-action " id = "report_button" >Check Reports</a>
+        <a href="{% url 'all-leaves' %}" class="list-group-item list-group-item-action" id = "leave_button" >Check Leaves</a>
+        {% else %}
+        <a href="{% url 'reports-home' %}" class="list-group-item list-group-item-action" id = "reportto_button">My Reports</a>
+        <a href="{% url 'leave-home' %}" class="list-group-item list-group-item-action" id = "bookleave_button">My Leaves</a>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- /#sidebar-wrapper -->
+
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+
+      <nav class="navbar navbar-expand-lg navbar-light border-bottom sticky-top" style="background-color: white; !important;" >
+        <button class="btn btn-primary" id="menu-toggle">Menu</button>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+            {% if user.is_authenticated %}
+              {% if not user.is_staff %}
+              <li class="nav-item active mt-1">
+                <a class="btn btn-primary btn-sm nav-link mt-1 mr-1" href="{% url 'leave-create' %}" style="color: white">Book Leave</a>
+              </li>
+              <li class="nav-item active mt-1">
+               <a class="btn btn-primary btn-sm nav-link mt-1 mr-1" href="{% url 'report-create' %}" style="color: white">New Report</a>
+              </li>
+            {% endif %}
+              <li class="nav-item active mt-1">
+                 <a class="btn btn-primary btn-sm nav-link mt-1" href="{% url 'post-create' %}" style="color: white">New Post</a>
+              </li>
+                 <li class="nav-item active mb-1 ">
+                <a class="nav-link" href="{% url 'profile' %}">
+                        <img height="40px" width="40px"  class="rounded-circle account-img" src="{{ user.profile.image.url }}">
+                    {{ user.username }}</a>
+                </li>
+                <li class="nav-item active mb-1 ">
+                <a class="nav-link mt-2" href="{% url 'logout' %}">  Logout</a>
+                </li>
+
+            {% else %}
+              <li class="nav-item active">
+                <a class="nav-link" href="{% url 'activity-home' %}">Home <span class="sr-only">(current)</span></a>
+              </li>
+            {% endif %}
+          </ul>
+        </div>
+      </nav>
+
+<div id = main-section>
+      <div class="container-fluid">
+        {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+            </div>
+        {% endfor %}
+      {% endif %}
+      <br>
+      {% block content %}{% endblock %}
+      </div>
+</div>
+    </div>
+    <!-- /#page-content-wrapper -->
+
+  </div>
+  <!-- /#wrapper -->
+
+  <!-- Bootstrap core JavaScript -->
+  <script src= {% static "activitystream/vendor/jquery/jquery.min.js" %}></script>
+  <script src={% static "activitystream/vendor/bootstrap/js/bootstrap.bundle.min.js" %}></script>
+
+  <!-- Menu Toggle Script -->
+  <script>
+    $("#menu-toggle").click(function(e) {
+      e.preventDefault();
+      $("#wrapper").toggleClass("toggled");
+    });
+  </script>
+
+  <script>
+      window.addEventListener( "pageshow", function ( event ) {
+        var historyTraversal = event.persisted ||
+                         ( typeof window.performance != "undefined" &&
+                              window.performance.navigation.type === 2 );
+  if ( historyTraversal ) {
+    // Handle page restore.
+    window.location.reload();
+  }
+});</script>
+</body>
+
+</html>

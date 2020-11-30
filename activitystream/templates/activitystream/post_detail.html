@@ -1,0 +1,138 @@
+{% extends "activitystream/base.html" %}
+{% block extra_css %}
+    <style>
+    #activity_button{
+        background-color: white;
+        font-size: 1rem;
+        color: darkorange;
+    }
+    </style>
+{% endblock %}
+{% block content %}
+    <style>
+
+
+h1, h2, h3, h4, h5, h6 {
+  color: #444444;
+}
+
+ul {
+  margin: 0;
+}
+
+.bg-steel {
+  background-color: #5f788a;
+}
+
+.site-header .navbar-nav .nav-link {
+  color: #cbd5db;
+}
+
+.site-header .navbar-nav .nav-link:hover {
+  color: #ffffff;
+}
+
+.site-header .navbar-nav .nav-link.active {
+  font-weight: 500;
+}
+
+.content-section {
+  background: #ffffff;
+  padding: 10px 20px;
+  border-radius: 3px;
+  margin-bottom: 20px;
+}
+
+.article-title {
+  color: #444444;
+}
+
+a.article-title:hover {
+  color: #428bca;
+  text-decoration: none;
+}
+
+.article-content {
+  white-space: pre-line;
+}
+
+.article-img {
+  height: 65px;
+  width: 65px;
+  margin-right: 16px;
+}
+
+.article-metadata {
+  padding-bottom: 1px;
+  margin-bottom: 4px;
+}
+
+.article-metadata a:hover {
+  color: #333;
+  text-decoration: none;
+}
+#postcontent{
+    padding: 1rem;
+    border: solid 1px lightgrey;
+    border-radius: 1rem;
+    background: white;
+    margin-bottom: 1rem;
+}
+#post_buttons{float:right}
+    </style>
+<div id="postcontent">
+    <article class="media content-section">
+    <img class="rounded-circle article-img" src="{{ object.author.profile.image.url }}">
+    <div class="media-body">
+        <div class="article-metadata">
+            <a class="mr-2" href="{% url 'user-posts' object.author.username %}">{{ object.author }}</a>
+            <small class="text-muted">{{ object.date_posted | date:'F d, Y' }}</small>
+        </div>
+        {% if object.author == user %}
+                <div id = "post_buttons">
+                <a class="btn btn-outline-info btn-sm mt-1 mb-1" href="{% url 'post-update' object.id %}">Update</a>
+                <a class="btn btn-outline-danger btn-sm mt-1 mb-1" href="{% url 'post-delete' object.id %}">Delete</a>
+                <a class="btn btn-outline-dark btn-sm mt-1 mb-1" href="{% url 'add_comment' pk=object.pk %}">Comment</a>
+                </div>
+            {% else %}
+                <div id = "post_buttons">
+                <a class="btn btn-outline-dark btn-sm mt-1 mb-1" href="{% url 'add_comment' pk=object.pk %}">Comment</a>
+                </div>
+            {% endif %}
+        <h2 class="article-title">{{ object.title }}</h2>
+        <p class="article-content">{{ object.content }}</p>
+        {% if post.document != '' %}
+        <a class="btn btn-primary" href="{{ object.document.url }}" target="_blank">{{ object.filename }}</a>
+        {% endif %}
+
+    </div>
+    </article>
+    <hr/>
+
+    {% for comment in comments %}
+        <div id="comment">
+        <article class="media content-section">
+        <img class="rounded-circle article-img" src="{{ comment.author.profile.image.url }}"  style="width:40px; height:40px">
+  <div class="media-body">
+    <div class="article-metadata">
+        <a class="mr-2" href="{% url 'user-posts' comment.author.username %}">{{ comment.author }}</a>
+      <small class="text-muted">{{ comment.date_posted | date:'F d, Y' }}</small>
+    </div>
+        {% if comment.author == user %}
+                <div id = "post_buttons">
+                <a class="btn btn-outline-info btn-sm mt-1 mb-1" href="{% url 'comment-update' comment.id %}">Update</a>
+                <a class="btn btn-outline-danger btn-sm mt-1 mb-1" href="{% url 'comment-delete' comment.id %}">Delete</a>
+                </div>
+            {% endif %}
+    <p class="article-content">{{ comment.content }}</p>
+        {% if comment.document != '' %}
+            <a class="btn btn-primary" href="{{ comment.document.url }}" target="_blank">{{ comment.filename }}</a>
+        {% endif %}
+
+  </div>
+</article>
+        </div>
+        <hr/>
+                {% endfor %}
+</div>
+{%  endblock content %}

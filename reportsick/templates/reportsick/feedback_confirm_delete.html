@@ -1,0 +1,123 @@
+{% extends 'activitystream/base.html' %}
+{% block extra_css %}
+    <style>
+    #report_button, #reportto_button{
+        background-color: white;
+        font-size: 1rem;
+        color: darkorange;
+    }
+    </style>
+{% endblock %}
+{% block content %}
+    <style>
+    .container{
+        border: 1px solid #e3e3e3;
+    }
+    a.btn:hover {
+    color: white;
+    text-decoration: none;
+    }
+    .container{
+        border: 1px solid #e3e3e3;
+    }
+    a.btn:hover {
+    color: white;
+    text-decoration: none;
+    }
+
+
+
+
+h1, h2, h3, h4, h5, h6 {
+  color: #444444;
+}
+
+ul {
+  margin: 0;
+}
+
+.bg-steel {
+  background-color: #5f788a;
+}
+
+.site-header .navbar-nav .nav-link {
+  color: #cbd5db;
+}
+
+.site-header .navbar-nav .nav-link:hover {
+  color: #ffffff;
+}
+
+.site-header .navbar-nav .nav-link.active {
+  font-weight: 500;
+}
+
+.content-section {
+  background: #ffffff;
+  padding: 10px 20px;
+  border: 1px solid #dddddd;
+  border-radius: 3px;
+  margin-bottom: 20px;
+}
+
+.article-title {
+  color: #444444;
+}
+
+a.article-title:hover {
+  color: #428bca;
+  text-decoration: none;
+}
+
+.article-content {
+  white-space: pre-line;
+}
+
+.article-img {
+  height: 65px;
+  width: 65px;
+  margin-right: 16px;
+}
+
+.article-metadata {
+  padding-bottom: 1px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid #e3e3e3
+}
+#comment{
+    margin-left: 100px;
+}
+.article-metadata a:hover {
+  color: #333;
+  text-decoration: none;
+}
+    </style>
+
+
+    <div class="content-section">
+        <form method="POST">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Delete Reply</legend>
+                <article class="media content-section">
+    <img class="rounded-circle article-img" src="{{ feedback.author.profile.image.url }}">
+    <div class="media-body">
+        <div class="article-metadata">
+            <a class="mr-2">{{ feedback.author }}</a>
+            <small class="text-muted">{{ feedback.date_posted | date:'F d, Y' }}</small>
+        </div>
+        <p class="article-content">{{ feedback.content }}</p>
+        {% if feedback.document != '' %}
+        <a class="btn btn-primary btn-sm" href="{{ feedback.document.url }}" target="_blank">{{ feedback.filename }}</a>
+            {% endif %}
+    </div>
+                </article>
+            </fieldset>
+            <div class="form-group">
+                <button class="btn btn-outline-danger" type="submit">Yes, Delete</button>
+                <a class="btn btn-outline-secondary" href="{% url 'report-detail' feedback.report.id %}">Cancel</a>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}
